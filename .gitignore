@@ -22,4 +22,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-firebase-debug.log
+.firebaserc
+*.log
+.env
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
+build
+lib
