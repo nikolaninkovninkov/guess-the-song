@@ -1,5 +1,4 @@
-export default interface Track {
-  artist: string;
+export default interface Playlist {
   title: string;
   albumUrl: string;
   uri: string;
