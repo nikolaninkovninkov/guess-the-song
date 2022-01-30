@@ -1,7 +1,20 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-
-const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&response_type=code&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state`;
+const scopes = [
+  'streaming',
+  'user-read-email',
+  'user-read-private',
+  'user-library-read',
+  'user-library-modify',
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'playlist-read-private',
+];
+const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${
+  process.env.REACT_APP_CLIENT_ID
+}&response_type=code&redirect_uri=${
+  process.env.REACT_APP_REDIRECT_URI
+}&scope=${scopes.join('%20')}`;
 export default function Login() {
   return (
     <Container

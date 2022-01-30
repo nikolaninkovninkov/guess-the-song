@@ -1,15 +1,26 @@
-require('dotenv').config();
+import { config } from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import SpotifyWebApi from 'spotify-web-api-node';
-const lyricsFinder = require('lyrics-finder');
+import functions from 'firebase-functions';
 const app = express();
+config();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const redirectUri = process.env.REDIRECT_URI_LOCAL;
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
+const NODE_ENV = 'development' as 'development' | 'production';
+const [redirectUri, clientId, clientSecret] =
+  NODE_ENV == 'development'
+    ? [
+        process.env.REDIRECT_URI,
+        process.env.CLIENT_ID,
+        process.env.CLIENT_SECRET,
+      ]
+    : [
+        functions.config().redirect_uri,
+        functions.config().client_id,
+        functions.config().client_secret,
+      ];
 if (!redirectUri || !clientId || !clientSecret)
   throw new Error('Invalid credentials in .env file');
 app.post('/refresh', (req, res) => {
@@ -57,12 +68,5 @@ app.post('/login', (req, res) => {
       res.sendStatus(400);
     });
 });
-
-app.get('/lyrics', async (req, res) => {
-  const lyrics =
-    (await lyricsFinder(req.query.artist, req.query.track)) ||
-    'No Lyrics Found';
-  res.json({ lyrics });
-});
-
-app.listen(5000, () => console.log('listening on port 5000'));
+if (NODE_ENV == 'production') functions.https.onRequest(app);
+else app.listen(5000, () => console.log('listening on port 5000'));

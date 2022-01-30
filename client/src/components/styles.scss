@@ -1,8 +1,22 @@
+body {
+  overflow: hidden;
+}
 .dashboard {
   display: flex;
   flex-direction: column;
   height: 100vh;
   padding: 10px 0 10px 0;
-  > *:not(.player) {
+  align-items: center;
+  &-column {
+    width: 70%;
+    .tab-content > * > * {
+      width: 100%;
+    }
+    .search-tab {
+      .playlists {
+        overflow-y: scroll;
+        max-height: 90vh;
+      }
+    }
   }
 }

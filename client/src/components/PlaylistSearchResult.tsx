@@ -1,5 +1,5 @@
 import React from 'react';
-import Playlist from './Playlist';
+import Playlist from '../types/Playlist';
 
 export default function PlaylistSearchResult({
   playlist,

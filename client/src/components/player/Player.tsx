@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import SpotifyPlayer from 'react-spotify-web-playback';
+import { setShuffle } from '../../api/spotify';
 
 export default function Player({
   accessToken,
@@ -8,10 +9,12 @@ export default function Player({
   accessToken: string | undefined;
   playlistUri: string | undefined;
 }) {
-  const [play, setPlay] = useState(false);
-
-  useEffect(() => setPlay(true), [playlistUri]);
-
+  const [, setPlay] = useState(false);
+  const [deviceId, setDeviceId] = useState('');
+  useEffect(() => {
+    if (!accessToken || !deviceId || !playlistUri) return;
+    setShuffle(accessToken, deviceId, true);
+  }, [accessToken, deviceId, playlistUri]);
   if (!accessToken) return null;
   return (
     <SpotifyPlayer
@@ -19,8 +22,9 @@ export default function Player({
       showSaveIcon
       callback={(state) => {
         if (!state.isPlaying) setPlay(false);
+        setDeviceId(state.currentDeviceId);
       }}
-      play={play}
+      play={true}
       uris={playlistUri ? [playlistUri] : []}
     />
   );

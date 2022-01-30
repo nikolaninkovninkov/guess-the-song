@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
+import useLocalStorage from './useLocalStorage';
 
 export default function useAuth(code: string) {
-  const [accessToken, setAccessToken] = useState();
-  const [refreshToken, setRefreshToken] = useState();
-  const [expiresIn, setExpiresIn] = useState();
+  const [accessToken, setAccessToken] = useLocalStorage('access-token', '');
+  const [refreshToken, setRefreshToken] = useLocalStorage('refesh-token', '');
+  const [expiresIn, setExpiresIn] = useLocalStorage('expires-in', 0);
 
   useEffect(() => {
+    if (accessToken) return;
     axios
       .post('/login', {
         code,
@@ -21,7 +23,7 @@ export default function useAuth(code: string) {
         console.log(err, err.message);
         // window.location.href = '/';
       });
-  }, [code]);
+  }, [code, setAccessToken, accessToken, setRefreshToken, setExpiresIn]);
 
   useEffect(() => {
     if (!refreshToken || !expiresIn) return;
@@ -40,7 +42,14 @@ export default function useAuth(code: string) {
     }, (expiresIn - 60) * 1000);
 
     return () => clearInterval(interval);
-  }, [refreshToken, expiresIn]);
+  }, [
+    refreshToken,
+    expiresIn,
+    setAccessToken,
+    accessToken,
+    setRefreshToken,
+    setExpiresIn,
+  ]);
 
   return accessToken;
 }
