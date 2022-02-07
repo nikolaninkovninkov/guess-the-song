@@ -1,10 +1,10 @@
-import { config } from 'dotenv';
+import { config as dotconfig } from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import SpotifyWebApi from 'spotify-web-api-node';
-import functions from 'firebase-functions';
+import * as functions from 'firebase-functions';
 const app = express();
-config();
+dotconfig();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,9 +17,9 @@ const [redirectUri, clientId, clientSecret] =
         process.env.CLIENT_SECRET,
       ]
     : [
-        functions.config().redirect_uri,
-        functions.config().client_id,
-        functions.config().client_secret,
+        functions.config().api.redirect_uri,
+        functions.config().api.client_id,
+        functions.config().api.client_secret,
       ];
 if (!redirectUri || !clientId || !clientSecret)
   throw new Error('Invalid credentials in .env file');
@@ -68,5 +68,7 @@ app.post('/login', (req, res) => {
       res.sendStatus(400);
     });
 });
-if (NODE_ENV == 'production') functions.https.onRequest(app);
-else app.listen(5000, () => console.log('listening on port 5000'));
+const api = functions.https.onRequest(app);
+export { api };
+if (NODE_ENV == 'development')
+  app.listen(5000, () => console.log('listening on port 5000'));

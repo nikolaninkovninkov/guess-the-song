@@ -37,3 +37,4 @@ node_modules/
 build
 lib
 .firebase/
+.runtimeconfig.json

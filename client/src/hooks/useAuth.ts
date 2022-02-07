@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import useLocalStorage from './useLocalStorage';
 
 export default function useAuth(code: string) {
   const [accessToken, setAccessToken] = useLocalStorage('access-token', '');
-  const [refreshToken, setRefreshToken] = useLocalStorage('refesh-token', '');
-  const [expiresIn, setExpiresIn] = useLocalStorage('expires-in', 0);
+  const [refreshToken, setRefreshToken] = useState();
+  const [expiresIn, setExpiresIn] = useState();
 
   useEffect(() => {
     if (accessToken) return;

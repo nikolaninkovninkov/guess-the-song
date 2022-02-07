@@ -1,5 +1,13 @@
+@use 'sass:math';
+$background: #242526;
+$dim: rgb(212, 209, 209);
+$text-color: #ffffff;
 body {
   overflow: hidden;
+  background-color: #242526;
+}
+*:not(input) {
+  color: $dim;
 }
 .dashboard {
   display: flex;
@@ -8,15 +16,108 @@ body {
   padding: 10px 0 10px 0;
   align-items: center;
   &-column {
-    width: 70%;
+    width: 50%;
+    .guess-tab {
+      width: 100%;
+      display: flex;
+
+      button {
+        font-size: 1.25rem;
+        border: none;
+        outline: none;
+        background-color: #21be58;
+        color: white;
+        border-radius: 0px 9999px 9999px 0;
+        padding: 0.5rem;
+        margin: 0.5rem 0.5rem 0.5rem 0;
+        flex: 1 1 0;
+      }
+      input {
+        margin-right: 0;
+        border-radius: 9999px 0 0 9999px;
+        flex: 2 1 0;
+      }
+    }
+    input {
+      border-radius: 9999px;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      outline: none;
+      border: none;
+      color: black;
+      font-size: 1.25rem;
+      background-color: white;
+      &::placeholder {
+        color: rgb(173, 173, 173);
+      }
+    }
     .tab-content > * > * {
       width: 100%;
+    }
+    .tab-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: left;
+    }
+    .search-tab .playlists {
+      position: absolute;
+      ::-webkit-scrollbar-thumb {
+        color: white;
+      }
+    }
+    .tab-toggle > span {
+      cursor: pointer;
+      padding: 10px;
+      font-size: 1.5rem;
+      color: white;
+      &.toggled {
+        text-decoration: underline;
+      }
     }
     .search-tab {
       .playlists {
         overflow-y: scroll;
         max-height: 90vh;
+        padding-bottom: 2rem;
       }
     }
+  }
+}
+$animation-duration: 2s;
+.dashboard {
+  &.guessed-true,
+  &.guessed-false {
+    .blanket {
+      opacity: 0.7;
+      transition: opacity math.div($animation-duration, 2) linear;
+    }
+  }
+}
+.blanket {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: black;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity math.div($animation-duration, 2) linear;
+}
+.guess-result {
+  animation: guess-result-reveal $animation-duration;
+  position: absolute;
+  right: 50%;
+  transform: translate(50%);
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 10000;
+}
+@keyframes guess-result-reveal {
+  0% {
+    top: -100px;
+  }
+  50%,
+  100% {
+    top: 50%;
   }
 }
